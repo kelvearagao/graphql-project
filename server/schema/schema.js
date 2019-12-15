@@ -18,9 +18,11 @@ const hobbiesData = [
 ]
 
 const postsData = [
-    {id: '1', comment: 'Building a mind'},
-    {id: '2', comment: 'GraphQL is Amazing'},
-    {id: '3', comment: 'How to change the world'}
+    {id: '1', comment: 'Building a mind', userId: '1'},
+    {id: '2', comment: 'GraphQL is Amazing', userId: '1'},
+    {id: '3', comment: 'How to change the world', userId: '19'},
+    {id: '4', comment: 'How to change the world', userId: '211'},
+    {id: '5', comment: 'How to change the world', userId: '1'}
 ]
 
 const {
@@ -57,7 +59,13 @@ const PostType = new GraphQLObjectType({
     description: 'Post description',
     fields: () => ({
         id: {type: GraphQLID},
-        comment: {type: GraphQLString}
+        comment: {type: GraphQLString},
+        user: {
+            type: UserType,
+            resolve(parent, args) {
+                return _.find(usersData, { id: parent.userId })
+            }
+        }
     })
 })
 
