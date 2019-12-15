@@ -30,7 +30,8 @@ const {
     GraphQLSchema,
     GraphQLString,
     GraphQLInt,
-    GraphQLID
+    GraphQLID,
+    GraphQLList
 } = graphql
 
 const UserType = new GraphQLObjectType({
@@ -40,7 +41,20 @@ const UserType = new GraphQLObjectType({
         id: {type: GraphQLID},
         name: {type: GraphQLString},
         age: {type: GraphQLInt},
-        profession: {type: GraphQLString}
+        profession: {type: GraphQLString},
+        
+        posts: {
+            type: new GraphQLList(PostType),
+            resolve(parent, args) {
+                return _.filter(postsData, { userId: parent.id })
+            }
+        },
+        hobbies: {
+            type: new GraphQLList(HobbyType),
+            resolve(parent, args) {
+                return _.filter(hobbiesData, { userId: parent.id })
+            }
+        }
     })
 })
 
