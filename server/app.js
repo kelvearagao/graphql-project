@@ -6,6 +6,7 @@ const schema = require('./schema/schema')
 const testSchema = require('./schema/types_schema')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const PORT = process.env.PORT || 4000
 
 mongoose.connect(process.env.MONGO_DB_HOST, 
     {   
@@ -29,7 +30,7 @@ app.use('/graphql', graphqlHTTP({
     schema: schema
 }))
 
-app.listen(4000, () => {
+app.listen(PORT, () => {
     console.log('Listining for requests on my awesome port 4000')
 })
 
