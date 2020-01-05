@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { graphqlOperation, API, Auth } from 'aws-amplify'
 import { createPost } from '../graphql/mutations'
+import { timingSafeEqual } from 'crypto'
 
 class CreatePost extends Component {
 
@@ -14,7 +15,10 @@ class CreatePost extends Component {
     componentDidMount = async () => {
         await Auth.currentUserInfo()
             .then(user => {
-                console.log('Curr: User', user.username)
+                this.setState({
+                    postOwnerId: user.attributes.sub,
+                    postOwnerUsername: user.username
+                })
             })
     }
 
@@ -26,8 +30,8 @@ class CreatePost extends Component {
         event.preventDefault()
 
         const input = {
-            postOwnerId: new Date().getMilliseconds(), //this.state.postOwnerId,
-            postOwnerUsername: 'kelve', //this.state.postOwnerUsername,
+            postOwnerId: this.state.postOwnerId,
+            postOwnerUsername: this.state.postOwnerUsername,
             postTitle: this.state.postTitle,
             postBody: this.state.postBody,
             createdAt: new Date().toISOString()

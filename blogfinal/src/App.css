@@ -64,19 +64,19 @@ input[type=submit]:hover {
 }
 
 
-.posts{
+.posts {
   display: flex;
   flex-direction: column;
-  box-shadow: 1px 1px 9px 7px #36181833;
 
-  padding: .5rem;
+  padding: 0;
 }
 
 
-.posts div{
-  box-shadow: 1px 1px 1px rgb(182, 235, 171);
+.posts li {
+  --box-shadow: 1px 1px 1px rgb(182, 235, 171);
+  box-shadow: 1px 1px 9px 7px #36181833;
   padding: .5rem;
-  margin: .6rem;
+  margin-top: .6rem;
   background-color: white;
 }
 
@@ -182,7 +182,7 @@ button{
 }
 
 ul.posts li {
-  margin-top: 24px;
+  --margin-top: 24px;
   list-style: none;
 }
 
