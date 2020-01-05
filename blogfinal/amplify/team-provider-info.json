@@ -10,6 +10,11 @@
             "StackName": "amplify-blogfinal-blogapi-212015",
             "StackId": "arn:aws:cloudformation:us-east-2:482203553004:stack/amplify-blogfinal-blogapi-212015/a91903e0-2cf5-11ea-bc56-0a569e9f7d94",
             "AmplifyAppId": "djnn5ru4wyue1"
+        },
+        "categories": {
+            "auth": {
+                "blogfinal4d3a92a0": {}
+            }
         }
     }
 }
