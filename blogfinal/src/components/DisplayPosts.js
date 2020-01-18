@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { listPosts } from '../graphql/queries'
 import { API, graphqlOperation} from 'aws-amplify'
-import  { onCreatePost, onDeletePost } from '../graphql/subscriptions'
+import  { onCreatePost, onDeletePost, onUpdatePost, onCreateComment } from '../graphql/subscriptions'
 import DeletePost from './DeletePost'
 import EditPost from './EditPost'
+import CreateCommentPost from './CreateCommentPost'
+import CommentPost from './CommentPost'
 
 class DisplayPosts extends Component {
 
@@ -45,11 +47,47 @@ class DisplayPosts extends Component {
                     })
                 }
             })
+
+        this.updatePostListener = API.graphql(graphqlOperation(onUpdatePost))
+            .subscribe({
+                next: postData => {
+                    const updatedPost = postData.value.data.onUpdatePost
+                    const index = this.state.posts.findIndex(post => post.id === updatedPost.id)
+
+                    const updatePosts = [
+                        ...this.state.posts.slice(0, index),
+                        updatedPost,
+                        ...this.state.posts.slice(index + 1)
+                    ]
+
+                    this.setState({
+                        posts: updatePosts
+                    })
+                }
+            })
+        
+        this.createPostCommentListener = API.graphql(graphqlOperation(onCreateComment))
+            .subscribe({
+                next: commentData => {
+                    const createdComment = commentData.value.data.onCreateComment
+                    let posts = [ ...this.state.posts]
+
+                    for (let post of posts) {
+                        if (createdComment.post.id === post.id) {
+                            post.comments.item.push(createdComment)
+                        }
+                    }
+
+                    this.setState({ posts })
+                }
+            })
     }
 
     componentWillUnmount() {
         this.createPostListener.unsubscribe()
         this.deletePostListener.unsubscribe()
+        this.updatePostListener.unsubscribe()
+        this.createPostCommentListener.unsubscribe()
     }
 
     getPosts = async () => {
@@ -78,8 +116,20 @@ class DisplayPosts extends Component {
 
                             <br />
 
-                            <EditPost />
-                            <DeletePost data={p} />
+                            <span>
+                                <EditPost data={p} />
+                                <DeletePost data={p} />
+                            </span>
+                            <span>
+                                <CreateCommentPost postId={p.id} />
+                                { p.comments.items.length > 0 && 
+                                    <span>Comments: </span>
+                                }
+                                {
+                                    p.comments.items.map((comment, index) => 
+                                        <CommentPost key={index} commentData={comment} />)
+                                }
+                            </span>
                         </li>
                     ))}
                 </ul>
